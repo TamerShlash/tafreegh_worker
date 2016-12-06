@@ -1,0 +1,16 @@
+{
+  "name": "adnan-stt",
+  "version": "1.0.0",
+  "description": "Adnan Ibrahim Lectures transcribed",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Tamer Shlash",
+  "license": "ISC",
+  "dependencies": {
+    "musicmetadata": "^2.0.2",
+    "watson-developer-cloud": "^1.3.0",
+    "wav-file-info": "0.0.7"
+  }
+}
