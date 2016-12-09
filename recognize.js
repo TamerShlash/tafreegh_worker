@@ -1,15 +1,14 @@
 var fs = require('fs');
-var watson = require('watson-developer-cloud');
+var SpeechToTextV1 = require('watson-developer-cloud/speech-to-text/v1');
 
 var audioDir = process.argv[2]
 var partname = process.argv[3]
 
 process.chdir(audioDir)
 
-var speech_to_text = watson.speech_to_text({
-  username: 'username',
-  password: 'password',
-  version: 'v1'
+var speech_to_text = new SpeechToTextV1({
+  username: '<username>',
+  password: '<password>'
 });
 
 var params = {

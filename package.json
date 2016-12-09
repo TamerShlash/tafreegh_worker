@@ -1,5 +1,5 @@
 {
-  "name": "adnan-stt",
+  "name": "tafreegh",
   "version": "1.0.0",
   "description": "Adnan Ibrahim Lectures transcribed",
   "main": "app.js",
@@ -9,8 +9,7 @@
   "author": "Tamer Shlash",
   "license": "ISC",
   "dependencies": {
-    "musicmetadata": "^2.0.2",
-    "watson-developer-cloud": "^1.3.0",
-    "wav-file-info": "0.0.7"
+    "watson-developer-cloud": "^2.13.1",
+    "fluent-ffmpeg": "^2.1.0"
   }
 }
