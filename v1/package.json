@@ -1,0 +1,14 @@
+{
+  "name": "tafreegh",
+  "version": "1.0.0",
+  "description": "Adnan Ibrahim Lectures transcribed",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Tamer Shlash",
+  "license": "ISC",
+  "dependencies": {
+    "watson-developer-cloud": "^2.13.1"
+  }
+}
