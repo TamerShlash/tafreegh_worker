@@ -10,6 +10,8 @@
   "license": "ISC",
   "dependencies": {
     "watson-developer-cloud": "^2.13.1",
-    "fluent-ffmpeg": "^2.1.0"
+    "fluent-ffmpeg": "^2.1.0",
+    "fs-extra": "^1.0.0",
+    "pg": "^6.1.1"
   }
 }

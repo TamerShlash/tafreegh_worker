@@ -1,0 +1,31 @@
+const config = {
+  process: {
+    pidFile: '/tmp/tafreegh/.pid',
+    workDir: '/tmp/tafreegh'
+  },
+  db: {
+    user: 'username',
+    database: 'database',
+    password: 'password',
+    host: 'host',
+    port: 5432
+  },
+  stt: {
+    partLength: 5,
+    credentials: {
+      username: 'watson-api-username',
+      password: 'watson-api-password'
+    },
+    params: {
+      content_type: 'audio/wav',
+      model: 'ar-AR_BroadbandModel',
+      continuous: true
+    }
+  },
+  web: {
+    url: 'http://localhost:3000',
+    token: 'token',
+  }
+};
+
+module.exports = config;

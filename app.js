@@ -1,37 +1,43 @@
 var fs     = require('fs');
+var fsxtra = require('fs-extra');
 var ffmpeg = require('fluent-ffmpeg');
-var ytdl   = require('./downloadYoutubeVideo.js');
-var manager = require('./manager.js');
 
-var video_id = 'gPk1OvmBPyw';
-var part_length = 5; // minutes
+var config = require('./config.js');
+var errors = require('./errors.js');
+var query = require('./query.js');
+var download = require('./download.js');
+var Transcriber = require('./transcriber.js');
+var upload = require('./upload');
 
-var stt_manager = new manager(video_id, part_length);
+try {
+  // If there is no previous PID, this will throw, and the job will start in catch.
+  var previousPid = fs.readFileSync(config.process.pidFile).toString();
+  // if there is a previous PID, but it's not running, this will throw and the job will start in catch.
+  process.kill(previousPid, 0);
+  // If there is a previous PID and it's running, we stop.
+  process.exit(0);
+} catch(e) {
+  fsxtra.emptyDirSync(config.process.workDir);
+  fs.writeFileSync(config.process.pidFile, process.pid);
+  process.chdir(config.process.workDir);
+}
 
-var video_title = ytdl(video_id);
+query(function(video_id) {
+  download(video_id);
 
-var pipeline = ffmpeg(video_id + ".wav");
-pipeline.ffprobe(function(err, metadata) {
-  if (err) {
-    console.log(err);
-    process.exit(1);
-  }
+  var pipeline = ffmpeg('audio.wav');
+  pipeline.ffprobe(function(err, metadata) {
+    if (err) errors.metadataError(err);
 
-  duration = metadata.format.duration;
-  var minutes = Math.floor(duration / 60);
+    var minutes = Math.floor(metadata.format.duration / 60);
+    console.log("This video is ~" + minutes + " minutes long");
+    var transcriber = new Transcriber(video_id, minutes, upload);
 
-  for(var i = 0; i * part_length <= minutes; i++) {
-    // var stt_stream = stt_manager.createStream();
-    pipeline.output(i + '.wav').seek(i * part_length * 60).duration(part_length * 60);
-    // pipeline.output(stt_stream).seek(start * 60).duration(part_length * 60);
-  }
-  pipeline.on('error', function() {});
-  pipeline.on('end', function() {
-    for(var i = 0; i * part_length <= minutes; i++) {
-      var audioSlice = fs.createReadStream('./' + i + '.wav');
-      var stt_stream = stt_manager.createStream();
-      audioSlice.pipe(stt_stream);
+    for(var i = 0; i * config.stt.partLength <= minutes; i++) {
+      pipeline.output('./' + i + '.wav').seek(i * config.stt.partLength * 60).duration(config.stt.partLength * 60);
     }
+    pipeline.on('error', errors.pipelineError);
+    pipeline.on('end', transcriber.transcribe.bind(transcriber));
+    pipeline.run();
   });
-  pipeline.run();
 });

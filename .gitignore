@@ -3,3 +3,4 @@ data
 *.txt
 *.wav
 node_modules
+config.js
